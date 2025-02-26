@@ -168,37 +168,37 @@ spec:
         description: Network interfaces for each subnetwork created by this module
         type:
           - list
-          - - string
+          - string
       - name: network_ids
         description: IDs of the new VPC network
         type:
           - list
-          - - string
+          - string
       - name: network_names
         description: Names of the new VPC networks
         type:
           - list
-          - - string
+          - string
       - name: network_self_links
         description: Self link of the new VPC network
         type:
           - list
-          - - string
+          - string
       - name: subnetwork_addresses
         description: IP address range of the primary subnetwork
         type:
           - list
-          - - string
+          - string
       - name: subnetwork_names
         description: Names of the subnetwork created in each network
         type:
           - list
-          - - string
+          - string
       - name: subnetwork_self_links
         description: Self link of the primary subnetwork
         type:
           - list
-          - - string
+          - string
   requirements:
     roles:
       - level: Project
