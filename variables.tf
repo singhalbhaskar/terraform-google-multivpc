@@ -29,44 +29,6 @@ variable "region" {
   type        = string
 }
 
-variable "network_name_prefix" {
-  description = "The base name of the vpcs and their subnets, will be appended with a sequence number"
-  type        = string
-  default     = ""
-}
-
-variable "network_count" {
-  description = "The number of vpc nettworks to create"
-  type        = number
-  default     = 4
-
-  validation {
-    condition     = var.network_count > 1
-    error_message = "The minimum VPCs able to be created by this module is 2. Use the standard Toolkit module at modules/network/vpc for count = 1"
-  }
-  validation {
-    condition     = var.network_count <= 8
-    error_message = "The maximum VPCs able to be created by this module is 8"
-  }
-}
-
-variable "global_ip_address_range" {
-  description = "IP address range (CIDR) that will span entire set of VPC networks"
-  type        = string
-  default     = "172.16.0.0/12"
-
-  validation {
-    condition     = can(cidrhost(var.global_ip_address_range, 0))
-    error_message = "var.global_ip_address_range must be an IPv4 CIDR range (e.g. \"172.16.0.0/12\")."
-  }
-}
-
-variable "subnetwork_cidr_suffix" {
-  description = "The size, in CIDR suffix notation, for each network (e.g. 24 for 172.16.0.0/24); changing this will destroy every network."
-  type        = number
-  default     = 16
-}
-
 variable "mtu" {
   type        = number
   description = "The network MTU (default: 8896). Recommended values: 0 (use Compute Engine default), 1460 (default outside HPC environments), 1500 (Internet default), or 8896 (for Jumbo packets). Allowed are all values in the range 1300 to 8896, inclusively."

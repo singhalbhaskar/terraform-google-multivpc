@@ -16,11 +16,15 @@
 
 locals {
   # this input variable is validated to be in CIDR format
-  network_name          = coalesce(replace(var.network_name_prefix, "_", "-"), replace(var.deployment_name, "_", "-"))
-  global_ip_cidr_prefix = split("/", var.global_ip_address_range)[0]
-  global_ip_cidr_suffix = split("/", var.global_ip_address_range)[1]
+  global_ip_address_range = "192.169.0.0/16"
+  network_count           = 8
+  network_name_prefix     = "${var.deployment_name}-gpunet"
+  subnetwork_cidr_suffix  = 24
+  network_name          = coalesce(replace(local.network_name_prefix, "_", "-"), replace(var.deployment_name, "_", "-"))
+  global_ip_cidr_prefix = split("/", local.global_ip_address_range)[0]
+  global_ip_cidr_suffix = split("/", local.global_ip_address_range)[1]
   global_ip_cidr_valid  = "${local.global_ip_cidr_prefix}/${terraform_data.global_ip_cidr_suffix.output}"
-  subnetwork_new_bits   = var.subnetwork_cidr_suffix - local.global_ip_cidr_suffix
+  subnetwork_new_bits   = local.subnetwork_cidr_suffix - local.global_ip_cidr_suffix
   maximum_subnetworks   = pow(2, local.subnetwork_new_bits)
   additional_networks = [
     for vpc in module.vpcs :
@@ -36,12 +40,12 @@ resource "terraform_data" "global_ip_cidr_suffix" {
   input = local.global_ip_cidr_suffix
   lifecycle {
     precondition {
-      condition     = local.maximum_subnetworks >= var.network_count
+      condition     = local.maximum_subnetworks >= local.network_count
       error_message = <<EOT
-      Global IP range ${var.global_ip_address_range} and subnetwork CIDR suffix
-      ${var.subnetwork_cidr_suffix} are incompatible with the VPC count
-      ${var.network_count}. The subnetwork CIDR suffix must be at least
-      ${ceil(log(var.network_count, 2))} greater than the global CIDR suffix.
+      Global IP range ${local.global_ip_address_range} and subnetwork CIDR suffix
+      ${local.subnetwork_cidr_suffix} are incompatible with the VPC count
+      ${local.network_count}. The subnetwork CIDR suffix must be at least
+      ${ceil(log(local.network_count, 2))} greater than the global CIDR suffix.
       EOT
     }
   }
@@ -50,7 +54,7 @@ resource "terraform_data" "global_ip_cidr_suffix" {
 module "vpcs" {
   source = "github.com/GoogleCloudPlatform/hpc-toolkit//modules/network/vpc?ref=v1.39.0&depth=1"
 
-  count = var.network_count
+  count = local.network_count
 
   project_id            = var.project_id
   deployment_name       = var.deployment_name
