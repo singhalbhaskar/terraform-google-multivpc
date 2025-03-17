@@ -61,17 +61,13 @@ Functional examples are included in the
 | enable\_internal\_traffic | Enable a firewall rule to allow all internal TCP, UDP, and ICMP traffic within the network | `bool` | `true` | no |
 | extra\_iap\_ports | A list of TCP ports for which to create firewall rules that enable IAP for TCP forwarding (use dedicated enable\_iap variables for standard ports) | `list(string)` | `[]` | no |
 | firewall\_rules | List of firewall rules | `any` | `[]` | no |
-| global\_ip\_address\_range | IP address range (CIDR) that will span entire set of VPC networks | `string` | `"172.16.0.0/12"` | no |
 | ips\_per\_nat | The number of IP addresses to allocate for each regional Cloud NAT (set to 0 to disable NAT) | `number` | `2` | no |
 | mtu | The network MTU (default: 8896). Recommended values: 0 (use Compute Engine default), 1460 (default outside HPC environments), 1500 (Internet default), or 8896 (for Jumbo packets). Allowed are all values in the range 1300 to 8896, inclusively. | `number` | `8896` | no |
-| network\_count | The number of vpc nettworks to create | `number` | `4` | no |
 | network\_description | An optional description of this resource (changes will trigger resource destroy/create) | `string` | `""` | no |
 | network\_interface\_defaults | The template of the network settings to be used on all vpcs. | <pre>object({<br>    network            = optional(string)<br>    subnetwork         = optional(string)<br>    subnetwork_project = optional(string)<br>    network_ip         = optional(string, "")<br>    nic_type           = optional(string, "GVNIC")<br>    stack_type         = optional(string, "IPV4_ONLY")<br>    queue_count        = optional(string)<br>    access_config = optional(list(object({<br>      nat_ip                 = string<br>      network_tier           = string<br>      public_ptr_domain_name = string<br>    })), [])<br>    ipv6_access_config = optional(list(object({<br>      network_tier           = string<br>      public_ptr_domain_name = string<br>    })), [])<br>    alias_ip_range = optional(list(object({<br>      ip_cidr_range         = string<br>      subnetwork_range_name = string<br>    })), [])<br>  })</pre> | <pre>{<br>  "access_config": [],<br>  "alias_ip_range": [],<br>  "ipv6_access_config": [],<br>  "network": null,<br>  "network_ip": "",<br>  "nic_type": "GVNIC",<br>  "queue_count": null,<br>  "stack_type": "IPV4_ONLY",<br>  "subnetwork": null,<br>  "subnetwork_project": null<br>}</pre> | no |
-| network\_name\_prefix | The base name of the vpcs and their subnets, will be appended with a sequence number | `string` | `""` | no |
 | network\_routing\_mode | The network dynamic routing mode | `string` | `"REGIONAL"` | no |
 | project\_id | Project in which the HPC deployment will be created | `string` | n/a | yes |
 | region | The default region for Cloud resources | `string` | n/a | yes |
-| subnetwork\_cidr\_suffix | The size, in CIDR suffix notation, for each network (e.g. 24 for 172.16.0.0/24); changing this will destroy every network. | `number` | `16` | no |
 
 ## Outputs
 
